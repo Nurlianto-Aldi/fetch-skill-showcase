@@ -1,26 +1,20 @@
+import { Routes, Route } from 'react-router'
 import './App.css'
+import HomePage from './pages/HomePage'
+import Header from './components/Header'
 
 function App() {
 
   return (
-    <div>
-      <h1
-        className='text-4xl'
-      >
-        this is working
-      </h1>
-      <h1
-        className='text-4xl font-roboto'
-      >
-        this is working
-      </h1>
-      <h1
-        className='text-4xl font-roboto-mono'
-      >
-        this is working
-      </h1>
-      
-    </div>
+    <>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />}
+          ></Route>
+        </Routes>
+      </main>
+    </>
   )
 }
 
