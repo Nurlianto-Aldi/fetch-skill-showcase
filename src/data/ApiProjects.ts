@@ -9,5 +9,5 @@ export type ApiProjectsProps = {
 export const ApiProjects: ApiProjectsProps[] = [
   {id: 1, title: "Weather API", desc: "Provides real-time weather data.", icon: "streamline-ultimate-color:weather-sun", link: "weather-api"},
   {id: 2, title: "The Movie DB", desc: "Films and TV shows database..", icon: "streamline-ultimate-color:movies-reel", link: "movie-api"},
-  {id: 1, title: "The Meal DB", desc: "Recipes and meal information source.", icon: "streamline-ultimate-color:fast-food-french-fries", link: "meal-api"},
+  {id: 3, title: "The Meal DB", desc: "Recipes and meal information source.", icon: "streamline-ultimate-color:fast-food-french-fries", link: "meal-api"},
 ]

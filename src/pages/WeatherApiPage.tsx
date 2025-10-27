@@ -1,6 +1,104 @@
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify/react'
+import { useEffect, useState } from 'react';
+import { type ChangeEvent } from 'react';
+
+interface WeatherData {
+  description: string;
+}
+
+interface MainData {
+  temp: number;
+  humidity: number;
+}
+
+interface WindData {
+  speed: number;
+}
+
+interface WeatherAPIResponse {
+  name: string;
+  weather: WeatherData[];
+  main: MainData;
+  wind: WindData;
+}
+
+interface DisplayDataProps {
+  city: string;
+  weather: string;
+  temp: string;
+  humidity: string;
+  wind: string;
+}
+
+const initialDisplayData: DisplayDataProps = {
+  city: "N/A",
+  weather: "N/A",
+  temp: "N/A",
+  humidity: "N/A",
+  wind: "N/A",
+}
+
+const fetchData = async (cityLocation: string): Promise<WeatherAPIResponse | null> => {
+  try {
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityLocation}&appid=309e4cead8d73a5a292404e24cb66e10`)
+    if(!response.ok) {
+      throw new Error("Error from the response")
+    }
+
+    const data = response.json();
+    return data
+
+  } catch (error) {
+    console.error(`There's an error with the fetch operation : ${error}`)
+    return null;
+  }
+}
 
 const WeatherApiPage = () => {
+
+  const [inputValue, setInputValue] = useState<string>("");
+  const [searchCity, setSearchCity] = useState<string>("");
+  const [weatherLocation, setWeatherLocation] = useState<DisplayDataProps>(initialDisplayData);
+
+  const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)
+    console.log(inputValue)
+  }
+
+  const handleSearch = () => {
+    if(inputValue.trim() !== "") {
+      setSearchCity(inputValue);
+      console.log(searchCity)
+    }
+  }
+
+  
+
+  useEffect(() => {
+    if(!searchCity) {
+      return
+    }
+
+    const loadWeather = async () => {
+      setWeatherLocation(initialDisplayData);
+
+      const data = await fetchData(searchCity);
+
+      if(data) {
+        const newDisplayData: DisplayDataProps = {
+          city: `${data.name}`,
+          weather: `${data.weather[0].description}`,
+          temp: `${(data.main.temp - 273.15).toFixed(1)} °C`,
+          humidity: `${data.main.humidity} %`,
+          wind: `${data.wind.speed} m/s`,
+        }
+        setWeatherLocation(newDisplayData)
+      } else {
+        setWeatherLocation({...initialDisplayData, city: "City Not Found"})
+      }
+    }
+    loadWeather();
+  }, [searchCity])
 
   return (
     <div
@@ -86,11 +184,19 @@ const WeatherApiPage = () => {
             className='flex flex-row items-center justify-center px-2 h-9 w-[216px] '
           >
             <input
+              onChange={handleInput}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch();
+                }
+              }}
+              value={inputValue}
               type="text"
               placeholder='Search your city...'
               className='rounded-md outline-none h-full'
             />
             <Icon 
+              onClick={handleSearch}
               icon="ic:outline-search"
               className='w-6 cursor-pointer h-full'
             />
@@ -101,43 +207,36 @@ const WeatherApiPage = () => {
         {/* result */}
         <div>
           <div
-            className='flex flex-col items-start justify-between w-[288px] h-[157.8px] outline-3 shadow-[6px_8px_0px_0_#2B2B23] rounded-md'
+            className='flex flex-row justify-between w-[400px] h-[157.8px] outline-3 shadow-[6px_8px_0px_0_#2B2B23] rounded-md p-6 font-roboto-mono'
           >
             <div
-              className='flex flex-row w-full items-center justify-between'
+              className='flex flex-col flex-1 w-full items-start justify-between font-bold'
             >
               <span>City</span>
-              <span>:</span>
-              <span>bandung</span>
-            </div>
-            <div
-              className='flex flex-row w-full items-center justify-between'
-            >
-              <span>Weather</span>
-              <span>:</span>
-              <span>bandung</span>
-            </div>
-            <div
-              className='flex flex-row w-full items-center justify-between'
-            >
               <span>Temp</span>
-              <span>:</span>
-              <span>bandung</span>
-            </div>
-            <div
-              className='flex flex-row w-full items-center justify-between'
-            >
+              <span>Weather</span>
               <span>Humidity</span>
-              <span>:</span>
-              <span>bandung</span>
+              <span>Wind</span>
             </div>
             <div
-              className='flex flex-row w-full items-center justify-between'
+              className='flex flex-col flex-1 pl-4 w-full items-start justify-between'
             >
-              <span>Wind</span>
               <span>:</span>
-              <span>bandung</span>
+              <span>:</span>
+              <span>:</span>
+              <span>:</span>
+              <span>:</span>
             </div>
+            <div
+              className='flex flex-col grow pl-4 w-full items-start justify-between'
+            >
+              <span>{weatherLocation.city}</span>
+              <span>{weatherLocation.temp}</span>
+              <span>{weatherLocation.weather}</span>
+              <span>{weatherLocation.humidity}</span>
+              <span>{weatherLocation.wind}</span>
+            </div>
+            
           </div>
         </div>
 
