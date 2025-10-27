@@ -4,10 +4,10 @@ import { ApiProjects } from "../data/ApiProjects";
 const HomePage = () => {
   return (
     <div
-      className="grid grid-cols-2 justify-items-center w-full h-full bg-[#D3C2CD] px-[75px] py-[50.4px] gap-10"
+      className="grid grid-cols-2 justify-center items-center w-full h-full"
     >
       {ApiProjects.map((project) => (
-        <div key={project.id}>
+        <div key={project.id} className="flex items-center justify-center">
           <ProjectCard project={project} />
         </div>
       ))}

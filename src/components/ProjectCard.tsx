@@ -1,8 +1,8 @@
 import { type ApiProjectsProps } from "../data/ApiProjects";
 import { Icon } from '@iconify/react';
+import { Link } from "react-router";
 
 const ProjectCard = ({ project }: { project: ApiProjectsProps} ) => {
-  
   
   return (
     <div
@@ -57,11 +57,12 @@ const ProjectCard = ({ project }: { project: ApiProjectsProps} ) => {
         className="flex items-center justify-center font-roboto-mono font-bold"
       >
         <div>
-          <a href="#" className="outline-3 px-5 py-2 rounded-md shadow-[6px_8px_0px_0_#2B2B23]">
+          <Link
+            to={`project/${project.link}`} className="outline-3 px-5 py-2 rounded-md shadow-[6px_8px_0px_0_#2B2B23]">
             <span>
               See Project
             </span>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
